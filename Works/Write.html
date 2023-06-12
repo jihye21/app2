@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gming - Write</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 200px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        .preview {
+            margin-bottom: 20px;
+        }
+
+        .preview img,
+        .preview video {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #3897f0;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function handleFileUpload(fileInput) {
+            var file = fileInput.files[0];
+            var previewContainer = document.getElementById("preview-container");
+            var previewElement;
+
+            if (file.type.startsWith("image/")) {
+                previewElement = document.createElement("img");
+            } else if (file.type.startsWith("video/")) {
+                previewElement = document.createElement("video");
+                previewElement.controls = true;
+            } else if (file.type.startsWith("audio/")) {
+                previewElement = document.createElement("audio");
+                previewElement.controls = true;
+            } else {
+                console.log("Unsupported file type");
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                previewElement.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            previewContainer.appendChild(previewElement);
+        }
+
+        function submitPost() {
+            var title = document.getElementById("title").value;
+            var content = document.getElementById("content").value;
+
+            var post = {
+                title: title,
+                content: content
+            };
+
+            savePostToDatabase(post);
+        }
+
+        function savePostToDatabase(post) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "save_post.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log("Post saved successfully");
+                    // Replace with any further actions after saving to the database
+                    window.location.href = "Main.html"; // Redirect to Main.html if needed
+                } else if (xhr.readyState === XMLHttpRequest.DONE && xhr.status !== 200) {
+                    console.error("Error saving post:", xhr.responseText);
+                }
+            };
+
+            xhr.send(JSON.stringify(post));
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Write a Post</h1>
+        <label for="title">Title:</label>
+        <input type="text" id="title" placeholder="Enter the title">
+
+        <label for="content">Content:</label>
+        <textarea id="content" placeholder="Enter the content"></textarea>
+
+        <label for="file">Upload Media:</label>
+        <input type="file" id="file" onchange="handleFileUpload(this)">
+
+        <div class="preview" id="preview-container"></div>
+
+        <button onclick="submitPost()">Submit</button>
+    </div>
+</body>
+</html>
