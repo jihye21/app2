@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Goming - Main</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        }
+    .header {
+        background-color: #fafafa;
+        padding: 5px;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 2;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .header h1 {
+        font-size: 24px;
+        margin: 0;
+        color: #000;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 120px auto 40px;
+        padding: 20px;
+        position: relative;
+    }
+
+    .search {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 5px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        font-size: 16px;
+    }
+
+    .search-button {
+        background-color: #3897f0;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .profile {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .profile-name {
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .options-box {
+        position: absolute;
+        display: none;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        padding: 10px;
+        top: 100%;
+        left: 0;
+        min-width: 150px;
+        z-index: 1;
+    }
+
+    .profile:hover .options-box {
+        display: block;
+    }
+
+    .options-box button {
+        background: none;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+    }
+
+    .options-box button:hover {
+        background-color: #f9f9f9;
+    }
+
+    .post {
+        margin-bottom: 40px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .post-profile-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .post-profile-name {
+        font-weight: bold;
+    }
+
+    .post-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        object-position: center;
+        margin-bottom: 10px;
+    }
+
+    .post-caption {
+        margin-top: 10px;
+    }
+
+    .post-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .post-actions button {
+        background-color: #3897f0;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .post-price {
+        font-weight: bold;
+    }
+
+    .write-button {
+        background-color: #3897f0;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .footer {
+        background-color: #fafafa;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid #ccc;
+    }
+    .post-actions button:hover {
+        background-color: #D4A7FB;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .write-button:hover {
+        background-color: #D4A7FB;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .search-button:hover {
+        background-color: #D4A7FB;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<script>
+    function redirectToProfileSettings() {
+        window.location.href = "profile-settings.html";
+    }
+
+    function logout() {
+        window.location.href = "login.html";
+    }
+
+    function searchPosts() {
+        var searchInput = document.getElementById("search-input").value;
+        var posts = document.getElementsByClassName("post");
+
+        for (var i = 0; i < posts.length; i++) {
+            var caption = posts[i].getElementsByClassName("post-caption")[0].textContent;
+
+            if (caption.toLowerCase().includes(searchInput.toLowerCase())) {
+                posts[i].style.display = "block";
+            } else {
+                posts[i].style.display = "none";
+            }
+        }
+    }
+
+    function increasePrice(element) {
+        var priceElement = element.parentElement.getElementsByClassName("post-price")[0];
+        var currentPrice = parseFloat(priceElement.textContent.replace("$", ""));
+        var updatedPrice = currentPrice + 1.00;
+        priceElement.textContent = "$" + updatedPrice.toFixed(2);
+    }
+
+    function redirectToChat() {
+        window.location.href = "chat.html";
+    }
+
+    function redirectToWrite() {
+        window.location.href = "write.html";
+    }
+</script>
+</head>
+<body>
+    <div class="header">
+        <div class="profile">
+            <img src="profile-image.jpg" alt="Profile Image" class="profile-image" onclick="redirectToProfileSettings()">
+            <div class="options-box">
+                <button onclick="redirectToProfileSettings()">Profile Settings</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <h1>Goming</h1>
+        <div class="search">
+            <input type="text" id="search-input" class="search-input" placeholder="Search">
+            <button class="search-button" onclick="searchPosts()">Search</button>
+        </div>
+        <div></div> <!-- Empty div for spacing purposes -->
+    </div>
+    <div class="container">
+        <div class="post">
+            <div class="post-header">
+                <img src="post-profile-image1.jpg" alt="Profile Image" class="post-profile-image">
+                <div class="post-profile-name">Jane Smith</div>
+            </div>
+            <img src="post-image1.jpg" alt="Post Image" class="post-image">
+            <div class="post-caption">Caption for post 1</div>
+            <div class="post-actions">
+                <button class="like-button" onclick="increasePrice(this)">Like</button>
+                <div class="post-price">$10.00</div>
+                <button class="trade-button" onclick="redirectToChat()">Trade</button>
+            </div>
+        </div>
+        <div class="post">
+            <div class="post-header">
+                <img src="post-profile-image2.jpg" alt="Profile Image" class="post-profile-image">
+                <div class="post-profile-name">Alex Johnson</div>
+            </div>
+            <img src="post-image2.jpg" alt="Post Image" class="post-image">
+            <div class="post-caption">Caption for post 2</div>
+            <div class="post-actions">
+                <button class="like-button" onclick="increasePrice(this)">Like</button>
+                <div class="post-price">$15.00</div>
+                <button class="trade-button" onclick="redirectToChat()">Trade</button>
+            </div>
+        </div>
+        <div class="post">
+            <div class="post-header">
+                <img src="post-profile-image3.jpg" alt="Profile Image" class="post-profile-image">
+                <div class="post-profile-name">Emily Davis</div>
+            </div>
+            <img src="post-image3.jpg" alt="Post Image" class="post-image">
+            <div class="post-caption">Caption for post 3</div>
+            <div class="post-actions">
+                <button class="like-button" onclick="increasePrice(this)">Like</button>
+                <div class="post-price">$20.00</div>
+                <button class="trade-button" onclick="redirectToChat()">Trade</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button class="write-button" onclick="redirectToWrite()">Write</button>
+    </div>
+</body>
+</html>
